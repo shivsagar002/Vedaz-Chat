@@ -1,0 +1,28 @@
+{
+  "name": "chat-app-backend",
+  "version": "1.0.0",
+  "description": "Real-time chat app backend with Node.js, Express, Socket.io, and MongoDB",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "db:purge": "node scripts/purge.js",
+    "lint": "eslint ."
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": ["chat", "socket.io", "express", "mongodb"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mongoose": "^8.4.0",
+    "socket.io": "^4.7.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.3"
+  }
+}
