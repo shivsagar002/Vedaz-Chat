@@ -558,13 +558,14 @@ input, textarea {
 
 /* ─── MESSAGE BUBBLE ─────────────────────────────────────────────────────── */
 .msg-bubble {
-  padding: 6px 10px 20px 10px; /* bottom padding makes space for time at bottom-right */
+  padding: 6px 10px 6px 10px;
   border-radius: 8px;
   word-break: break-word;
-  position: relative;
   box-shadow: var(--shadow-sm);
   transition: box-shadow var(--transition);
-  min-width: 90px;
+  display: inline-block;
+  max-width: 100%;
+  min-width: 70px;
 }
 .msg-bubble--mine {
   background: var(--bg-msg-out);
@@ -585,25 +586,30 @@ input, textarea {
 .msg-bubble:hover { box-shadow: var(--shadow-md); }
 
 .msg-text {
-  font-size: 14px;
+  font-size: 14.5px;
   line-height: 1.45;
   white-space: pre-wrap;
   text-align: left;
+  display: inline; /* inline flow so meta can float next to it */
 }
 
 .msg-meta {
-  position: absolute;
-  bottom: 3px;
-  right: 6px;
-  display: flex;
+  display: inline-flex; /* align time + ticks horizontally */
   align-items: center;
-  gap: 3px;
+  gap: 3.5px;
+  float: right;
+  margin-top: 6px;
+  margin-left: 10px;
+  position: relative;
+  bottom: -3px; /* sit at the bottom-right corner */
 }
 .msg-time {
   font-size: 10px;
   font-weight: 300;
   color: rgba(233, 237, 239, 0.45);
+  white-space: nowrap;
 }
+
 
 /* ─── STATUS TICKS ───────────────────────────────────────────────────────── */
 .msg-status { display: flex; align-items: center; }
@@ -870,7 +876,6 @@ input, textarea {
   /* Messages */
   .messages-area   { padding: 8px 8px; }
   .msg-content-col { max-width: 88%; }
-  .msg-bubble      { padding: 7px 10px; }
   .msg-text        { font-size: 13.5px; }
   .msg-time        { font-size: 10px; }
   .date-separator span { font-size: 11px; padding: 3px 10px; }
