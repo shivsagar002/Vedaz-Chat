@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useLayoutEffect } from 'react';
 import MessageBubble from './MessageBubble';
 import TypingIndicator from './TypingIndicator';
 import MessageInput from './MessageInput';
@@ -16,6 +16,53 @@ const ChatWindow = ({ messages, typingUsers, onSend, onTyping, isConnected, isLo
   const { user } = useAuth();
   const bottomRef = useRef(null);
   const containerRef = useRef(null);
+
+  // Dynamically calculate and set messages area height to prevent screen-scrolling
+  useLayoutEffect(() => {
+    const updateHeight = () => {
+      const header = document.querySelector('.app-header');
+      const inputBar = document.querySelector('.msg-input-bar');
+      const connectionBanner = document.querySelector('.connection-banner');
+      const globalError = document.querySelector('.global-error');
+
+      const headerHeight = header ? header.getBoundingClientRect().height : 0;
+      const inputBarHeight = inputBar ? inputBar.getBoundingClientRect().height : 0;
+      const connectionBannerHeight = connectionBanner ? connectionBanner.getBoundingClientRect().height : 0;
+      const globalErrorHeight = globalError ? globalError.getBoundingClientRect().height : 0;
+
+      const viewportHeight = window.innerHeight;
+      const messagesHeight = viewportHeight - headerHeight - inputBarHeight - connectionBannerHeight - globalErrorHeight;
+
+      if (containerRef.current) {
+        containerRef.current.style.height = `${messagesHeight}px`;
+        containerRef.current.style.flex = 'none';
+      }
+    };
+
+    // Run initially
+    updateHeight();
+
+    // Set up ResizeObserver to track size changes on header, input bar, or main app container
+    const observer = new ResizeObserver(() => {
+      updateHeight();
+      bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    });
+
+    const header = document.querySelector('.app-header');
+    const inputBar = document.querySelector('.msg-input-bar');
+    const appContainer = document.querySelector('.app-container');
+
+    if (header) observer.observe(header);
+    if (inputBar) observer.observe(inputBar);
+    if (appContainer) observer.observe(appContainer);
+
+    window.addEventListener('resize', updateHeight);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', updateHeight);
+    };
+  }, [messages, typingUsers, isConnected]);
 
   // Auto-scroll to bottom on new messages
   useEffect(() => {
